@@ -188,12 +188,13 @@ public class DisplayPanel extends javax.swing.JPanel {
             return;
         }
         int id = Integer.parseInt(model.getValueAt(selectedRowIndex, 0).toString());
-        try {
+        int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this product?", "Delete Product", JOptionPane.YES_NO_OPTION);
+        if (result == JOptionPane.YES_OPTION) {
+            // Perform the deletion
+            // ...
             dbHelper.deleteProduct(id);
-            initData();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
         }
+        initData();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked

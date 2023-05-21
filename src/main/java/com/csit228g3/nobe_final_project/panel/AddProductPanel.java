@@ -6,13 +6,11 @@ package com.csit228g3.nobe_final_project.panel;
 
 import com.csit228g3.nobe_final_project.DBHelper;
 import com.csit228g3.nobe_final_project.components.DatePicker;
-import com.csit228g3.nobe_final_project.frame.HomeFrame;
 import com.csit228g3.nobe_final_project.model.CategoryModel;
 import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -296,28 +294,20 @@ public class AddProductPanel extends javax.swing.JPanel {
         double price = Double.parseDouble(txtPrice.getText());
         CategoryModel category = (CategoryModel) cbCategory.getSelectedItem();
         String date = txtDate.getText();
-        try {
-            dbHelper.addProduct(name, price, category.getId(), date);
-            resetFields();
-            JOptionPane.showMessageDialog(this, "Product Successfully Saved!");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+        dbHelper.addProduct(name, price, category.getId(), date);
+        resetFields();
+        JOptionPane.showMessageDialog(this, "Product Successfully Saved!");
     }//GEN-LAST:event_btnAddMouseClicked
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         // TODO add your handling code here:
         String category = JOptionPane.showInputDialog("Add Category ");
-        try {
-            dbHelper.addCategory(category);
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+        dbHelper.addCategory(category);
     }//GEN-LAST:event_jButton2MouseClicked
 
     private void txtDateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDateMouseClicked
         // TODO add your handling code here:
-        DatePicker datePicker = new DatePicker(this);
+        DatePicker datePicker = new DatePicker((JFrame) SwingUtilities.getWindowAncestor(this));
         String pickedDate = datePicker.setPickedDate();
         if (pickedDate != null) {
             txtDate.setText(pickedDate);

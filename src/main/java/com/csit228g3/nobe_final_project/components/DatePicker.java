@@ -13,8 +13,11 @@ import javax.swing.*;
  *
  * @author LENOVO
  */
-public class DatePicker {
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
+public class DatePicker {
     private int month;
     private int year;
     private JLabel label;
@@ -22,7 +25,7 @@ public class DatePicker {
     private JDialog dialog;
     private JButton[] buttons;
 
-    public DatePicker(JPanel parent) {
+    public DatePicker(JFrame parent) {
         dialog = new JDialog();
         dialog.setModal(true);
         dialog.setTitle("Date Picker");
@@ -114,3 +117,4 @@ public class DatePicker {
         return sdf.format(cal.getTime());
     }
 }
+

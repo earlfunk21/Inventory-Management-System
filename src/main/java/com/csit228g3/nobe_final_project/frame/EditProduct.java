@@ -5,14 +5,14 @@
 package com.csit228g3.nobe_final_project.frame;
 
 import com.csit228g3.nobe_final_project.DBHelper;
+import com.csit228g3.nobe_final_project.components.DatePicker;
 import com.csit228g3.nobe_final_project.model.CategoryModel;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -33,9 +33,9 @@ public class EditProduct extends javax.swing.JFrame {
         try {
             ResultSet rs = dbHelper.getCategories();
             while (rs.next()) {
-                int id = rs.getInt("id");
+                int categoryId = rs.getInt("id");
                 String name = rs.getString("name");
-                CategoryModel category = new CategoryModel(id, name);
+                CategoryModel category = new CategoryModel(categoryId, name);
                 cbCategory.addItem(category);
             }
         } catch (SQLException e) {
@@ -86,7 +86,7 @@ public class EditProduct extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
                 .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -136,7 +136,7 @@ public class EditProduct extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(12, Short.MAX_VALUE)
                         .addComponent(jLabel4))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(1, 1, 1)
@@ -153,6 +153,11 @@ public class EditProduct extends javax.swing.JFrame {
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtDateFocusLost(evt);
+            }
+        });
+        txtDate.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtDateMouseClicked(evt);
             }
         });
 
@@ -212,7 +217,7 @@ public class EditProduct extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 167, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 173, Short.MAX_VALUE)
                 .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -221,7 +226,7 @@ public class EditProduct extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(12, Short.MAX_VALUE)
                         .addComponent(jLabel5))
                     .addComponent(txtPrice))
                 .addContainerGap())
@@ -288,12 +293,17 @@ public class EditProduct extends javax.swing.JFrame {
             while (rs.next()) {
                 txtName.setText(rs.getString("name"));
                 int categoryId = rs.getInt("category_id");
-                String category = rs.getString("category");
-                CategoryModel categoryModel = new CategoryModel(categoryId, category);
-                cbCategory.setSelectedItem(categoryModel);
+
+                for (int i = 0; i < cbCategory.getItemCount(); i++) {
+                    CategoryModel categoryModel = cbCategory.getItemAt(i);
+                    if (categoryModel.getId() == categoryId) {
+                        cbCategory.setSelectedItem(categoryModel);
+                        break;
+                    }
+                }
                 txtPrice.setText(String.valueOf(rs.getDouble("price")));
                 Date date = rs.getDate("date");
-                DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+                DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                 txtDate.setText(df.format(date));
             }
         } catch (SQLException e) {
@@ -308,11 +318,7 @@ public class EditProduct extends javax.swing.JFrame {
         double price = Double.parseDouble(txtPrice.getText());
         CategoryModel category = (CategoryModel) cbCategory.getSelectedItem();
         String date = txtDate.getText();
-        try {
-            dbHelper.editProduct(id, name, price, category.getId(), date);
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+        dbHelper.editProduct(id, name, price, category.getId(), date);
         JOptionPane.showMessageDialog(rootPane, "Product Successfully Saved!");
         HomeFrame homeFrame = new HomeFrame();
         homeFrame.setVisible(true);
@@ -327,7 +333,7 @@ public class EditProduct extends javax.swing.JFrame {
 
     private void txtDateFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDateFocusGained
         // TODO add your handling code here:
-        if (txtDate.getText().equals("mm/dd/yyyy")) {
+        if (txtDate.getText().equals("dd/MM/yyyy")) {
             txtDate.setText("");
         }
     }//GEN-LAST:event_txtDateFocusGained
@@ -335,7 +341,7 @@ public class EditProduct extends javax.swing.JFrame {
     private void txtDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDateFocusLost
         // TODO add your handling code here:
         if (txtDate.getText().isEmpty()) {
-            txtDate.setText("mm/dd/yyyy");
+            txtDate.setText("dd/MM/yyyy");
         }
     }//GEN-LAST:event_txtDateFocusLost
 
@@ -349,11 +355,7 @@ public class EditProduct extends javax.swing.JFrame {
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
         // TODO add your handling code here:
         String category = JOptionPane.showInputDialog("Add Category ");
-        try {
-            dbHelper.addCategory(category);
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+        dbHelper.addCategory(category);
     }//GEN-LAST:event_jButton3MouseClicked
 
     private void cbCategoryFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbCategoryFocusGained
@@ -371,6 +373,19 @@ public class EditProduct extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }//GEN-LAST:event_cbCategoryFocusGained
+
+    private void txtDateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDateMouseClicked
+        // TODO add your handling code here:
+        JFrame frame = new JFrame("Date Picker");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 500);
+        frame.setLocationRelativeTo(null);
+        DatePicker datePicker = new DatePicker(frame);
+        String pickedDate = datePicker.setPickedDate();
+        if (pickedDate != null) {
+            txtDate.setText(pickedDate);
+        }
+    }//GEN-LAST:event_txtDateMouseClicked
 
     /**
      * @param args the command line arguments
