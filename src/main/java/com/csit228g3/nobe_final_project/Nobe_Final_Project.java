@@ -6,7 +6,6 @@
 package com.csit228g3.nobe_final_project;
 
 import com.csit228g3.nobe_final_project.frame.HomeFrame;
-import javax.swing.UIManager;
 
 /**
  *

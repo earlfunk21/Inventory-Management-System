@@ -11,6 +11,7 @@ package com.csit228g3.nobe_final_project;
 import java.sql.*;
 
 public class MySQLConnection {
+
     private static final String DB_URL = "jdbc:mysql://localhost:3306/dbims"; // replace with your database URL
     private static final String USER = "root"; // replace with your username
     private static final String PASS = ""; // replace with your password
@@ -28,6 +29,7 @@ public class MySQLConnection {
     }
 
     public static class Query {
+
         private Connection conn;
 
         public Query() throws SQLException {
@@ -38,13 +40,6 @@ public class MySQLConnection {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             return rs;
-        }
-        
-        public ResultSet getById(String sql, int id) throws SQLException{
-            PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, id);
-            ResultSet result = statement.executeQuery();
-            return result;
         }
 
         public int update(String sql) throws SQLException {
